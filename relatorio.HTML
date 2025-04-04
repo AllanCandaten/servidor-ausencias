@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relatório de Ausências</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #02fea9;
+      color: black;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Relatório de Ausências</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Nome</th>
+        <th>Justificativa</th>
+        <th>Horário Início</th>
+        <th>Horário Fim</th>
+        <th>Tempo Ausente</th>
+      </tr>
+    </thead>
+    <tbody id="tabela-ausencias">
+      <!-- Linhas preenchidas via JavaScript -->
+    </tbody>
+  </table>
+
+  <script>
+    function formatarHora(iso) {
+      if (!iso) return "-";
+      const data = new Date(iso);
+      return data.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+
+    function formatarData(iso) {
+      if (!iso) return "-";
+      const data = new Date(iso);
+      return data.toLocaleDateString("pt-BR");
+    }
+
+    function calcularDuracao(inicio, fim) {
+      if (!inicio || !fim) return "-";
+      const t1 = new Date(inicio);
+      const t2 = new Date(fim);
+      const diff = Math.floor((t2 - t1) / 1000);
+      const minutos = String(Math.floor(diff / 60)).padStart(2, '0');
+      const segundos = String(diff % 60).padStart(2, '0');
+      return `${minutos}:${segundos}`;
+    }
+
+    fetch("https://servidor-ausencias.onrender.com/relatorio")
+      .then(res => res.json())
+      .then(data => {
+        const tabela = document.getElementById("tabela-ausencias");
+        data.reverse().forEach(item => {
+          const tr = document.createElement("tr");
+
+          tr.innerHTML = `
+            <td>${formatarData(item.hora_entrada)}</td>
+            <td>${item.usuario}</td>
+            <td>${item.justificativa}</td>
+            <td>${formatarHora(item.hora_entrada)}</td>
+            <td>${formatarHora(item.hora_saida)}</td>
+            <td>${calcularDuracao(item.hora_entrada, item.hora_saida)}</td>
+          `;
+          tabela.appendChild(tr);
+        });
+      })
+      .catch(err => {
+        console.error("Erro ao buscar relatório:", err);
+        alert("Erro ao carregar dados do relatório.");
+      });
+  </script>
+</body>
+</html>

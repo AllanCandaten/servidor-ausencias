@@ -8,8 +8,10 @@ app.use(express.json());
 
 const banco = "ausencias.json";
 
-app.post("/registrar_ausencia", (req, res) => {
-    const { usuario, justificativa, status, timestamp } = req.body;
+app.post('/registrar_ausencia', (req, res) => {
+    const { usuario, justificativa, hora_entrada, hora_saida } = req.body;
+
+    console.log({ usuario, justificativa, hora_entrada, hora_saida });
 
     let dados = [];
     if (fs.existsSync(banco)) {

@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     function enviarJustificativa(nomeUsuario, justificativa) {
@@ -12,8 +12,8 @@
             })
         })
         .then(response => response.json())
-        .then(data => console.log("Justificativa enviada:", data))
-        .catch(error => console.error("Erro ao enviar justificativa:", error));
+        .then(data => console.log("✅ Justificativa enviada:", data))
+        .catch(error => console.error("❌ Erro ao enviar justificativa:", error));
     }
 
     function capturarNomeUsuario() {
@@ -44,6 +44,7 @@
 
     observer.observe(document.body, { childList: true, subtree: true });
 
+    // Executa também após alguns segundos para garantir
     setTimeout(() => {
         adicionarEventoAoBotao();
     }, 3000);
