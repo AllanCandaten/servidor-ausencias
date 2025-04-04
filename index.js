@@ -18,7 +18,8 @@ app.post('/registrar_ausencia', (req, res) => {
         dados = JSON.parse(fs.readFileSync(banco));
     }
 
-    dados.push({ usuario, justificativa, status, timestamp });
+    // Corrigido aqui!
+    dados.push({ usuario, justificativa, hora_entrada, hora_saida });
 
     fs.writeFileSync(banco, JSON.stringify(dados, null, 2));
     res.json({ ok: true, msg: "Justificativa registrada" });
