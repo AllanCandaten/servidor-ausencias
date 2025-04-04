@@ -2,6 +2,7 @@
     const SERVIDOR = "https://servidor-ausencias.onrender.com";
     let timerInterval;
     let tempoInicial;
+    let horaEntradaGlobal;
 
     function capturarNomeUsuario() {
         const nomeSpan = document.querySelector("span._avatar-person-details__name_pn7wi_7 span");
@@ -9,15 +10,8 @@
     }
 
     function enviarJustificativa(usuario, justificativa, hora_entrada, hora_saida = null) {
-        const dados = {
-            usuario,
-            justificativa,
-            hora_entrada
-        };
-
-        if (hora_saida) {
-            dados.hora_saida = hora_saida;
-        }
+        const dados = { usuario, justificativa, hora_entrada };
+        if (hora_saida) dados.hora_saida = hora_saida;
 
         fetch(`${SERVIDOR}/registrar_ausencia`, {
             method: "POST",
@@ -31,9 +25,9 @@
 
     function iniciarTimer(modal, justificativa, usuario, botaoOriginal) {
         tempoInicial = new Date();
-        const hora_entrada = tempoInicial.toISOString();
+        horaEntradaGlobal = tempoInicial.toISOString(); // Salva a hora de início
 
-        enviarJustificativa(usuario, justificativa, hora_entrada); // <- Envia hora_entrada
+        enviarJustificativa(usuario, justificativa, horaEntradaGlobal); // Envia hora_entrada
 
         modal.innerHTML = `
             <h3 style="margin-bottom: 10px;">Ausente por: ${justificativa}</h3>
@@ -54,9 +48,8 @@
             clearInterval(timerInterval);
             const hora_saida = new Date().toISOString();
 
-            enviarJustificativa(usuario, justificativa, hora_entrada, hora_saida); // <- Envia hora_saida também
+            enviarJustificativa(usuario, justificativa, horaEntradaGlobal, hora_saida); // Atualiza com hora_saida
 
-            alert("✅ Tempo registrado com sucesso!");
             document.getElementById("justificativa-overlay").remove();
             botaoOriginal.textContent = "Justificar Ausência";
             botaoOriginal.disabled = false;

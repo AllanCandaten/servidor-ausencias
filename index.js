@@ -11,18 +11,26 @@ const banco = "ausencias.json";
 app.post('/registrar_ausencia', (req, res) => {
     const { usuario, justificativa, hora_entrada, hora_saida } = req.body;
 
-    console.log({ usuario, justificativa, hora_entrada, hora_saida });
-
     let dados = [];
     if (fs.existsSync(banco)) {
         dados = JSON.parse(fs.readFileSync(banco));
     }
 
-    // Corrigido aqui!
-    dados.push({ usuario, justificativa, hora_entrada, hora_saida });
+    // Se já existe um registro com mesma hora_entrada e sem hora_saida, atualiza
+    const registroAberto = dados.find(r =>
+        r.usuario === usuario &&
+        r.hora_entrada === hora_entrada &&
+        !r.hora_saida
+    );
+
+    if (registroAberto && hora_saida) {
+        registroAberto.hora_saida = hora_saida;
+    } else {
+        dados.push({ usuario, justificativa, hora_entrada });
+    }
 
     fs.writeFileSync(banco, JSON.stringify(dados, null, 2));
-    res.json({ ok: true, msg: "Justificativa registrada" });
+    res.json({ ok: true, msg: "Registro salvo/atualizado com sucesso" });
 });
 
 app.get("/relatorio", (req, res) => {
