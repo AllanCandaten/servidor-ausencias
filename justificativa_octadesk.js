@@ -2,10 +2,14 @@
     'use strict';
 
     function enviarJustificativa(nomeUsuario, justificativa) {
-        fetch("http://localhost:5000/registrar_ausencia", {
+        fetch("https://servidor-ausencias.onrender.com/registrar_ausencia", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ usuario: nomeUsuario, justificativa: justificativa, timestamp: new Date().toISOString() })
+            body: JSON.stringify({
+                usuario: nomeUsuario,
+                justificativa: justificativa,
+                timestamp: new Date().toISOString()
+            })
         })
         .then(response => response.json())
         .then(data => console.log("Justificativa enviada:", data))
