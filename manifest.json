@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Justificativa de Ausência - Octadesk",
+  "version": "1.0",
+  "description": "Botão flutuante para justificar ausência",
+  "permissions": ["scripting"],
+  "host_permissions": ["https://app.octadesk.com/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://app.octadesk.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
