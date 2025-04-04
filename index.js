@@ -28,5 +28,5 @@ app.get("/relatorio", (req, res) => {
     res.json(dados);
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
